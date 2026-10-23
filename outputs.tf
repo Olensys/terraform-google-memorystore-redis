@@ -1,20 +1,47 @@
 output "id" {
-  description = "Identifier of the primary resource. Null when create is false."
-  value       = var.create ? var.name : null
+  description = "Cluster ID (projects/<project>/locations/<region>/clusters/<name>). Null when create is false."
+  value       = var.create ? module.this[0].id : null
 }
 
 output "name" {
-  description = "Name of the primary resource. Null when create is false."
+  description = "Cluster name. Null when create is false."
   value       = var.create ? var.name : null
 }
 
-# GCP modules replace this output with `self_link`. Replace `null` with the resource's ARN.
-output "arn" {
-  description = "ARN of the primary resource. Null when create is false."
-  value       = null
+output "self_link" {
+  description = "Relative resource path of the cluster. Null when create is false."
+  value       = var.create ? module.this[0].id : null
 }
 
-output "tags" {
-  description = "Tags applied to every taggable resource, with context.extra_tags merged in. Null when create is false."
-  value       = var.create ? local.tags : null
+output "discovery_endpoint" {
+  description = "Host address of the cluster discovery endpoint. Null when create is false."
+  value       = var.create ? try(module.this[0].discovery_endpoints[0].address, null) : null
+}
+
+output "port" {
+  description = "Port of the cluster discovery endpoint. Null when create is false."
+  value       = var.create ? try(module.this[0].discovery_endpoints[0].port, null) : null
+}
+
+output "labels" {
+  description = "Labels applied to the cluster, with context.extra_tags merged in. Null when create is false."
+  value       = var.create ? local.labels : null
+}
+
+output "security_config" {
+  description = "Effective authorization_mode and transit_encryption_mode. Null when create is false."
+  value = var.create ? {
+    authorization_mode      = local.authorization_mode
+    transit_encryption_mode = local.transit_encryption_mode
+  } : null
+}
+
+output "service_connection_policies" {
+  description = "Private Service Connect connection policies created for the cluster, keyed by policy name. Null when create is false."
+  value       = var.create ? local.service_connection_policies : null
+}
+
+output "replica_count_effective" {
+  description = "Replicas per shard after the environment default is applied. Null when create is false."
+  value       = var.create ? local.replica_count : null
 }
