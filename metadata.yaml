@@ -1,10 +1,10 @@
-name: __NAME__
-cloud: __CLOUD__          # aws | google | common
+name: terraform-google-memorystore-redis
+cloud: google          # aws | google | common
 tier: capability          # primitive | capability | blueprint
 maturity: experimental    # experimental | stable | deprecated
-description: __DESCRIPTION__
+description: Memorystore for Redis Cluster with AUTH and in-transit encryption, a Private Service Connect connection policy, and HA in prod
 owners: [platform]
 upstream: null            # e.g. "terraform-aws-modules/s3-bucket/aws 5.17.0"
 pairs_with: null          # e.g. "terraform-google-gcs-bucket"
-registry_name: __NAME__
+registry_name: terraform-google-memorystore-redis
 deprecated: null          # { removal: YYYY-MM-DD, replacement: <repo> }

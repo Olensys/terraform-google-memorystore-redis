@@ -1,6 +1,6 @@
-# __NAME__
+# terraform-google-memorystore-redis
 
-__DESCRIPTION__
+Memorystore for Redis Cluster with AUTH and in-transit encryption, a Private Service Connect connection policy, and HA in prod
 
 ## Opinions
 
@@ -10,7 +10,7 @@ __DESCRIPTION__
 
 ```hcl
 module "this" {
-  source = "git::https://github.com/Olensys/__NAME__.git?ref=v1.0.0"
+  source = "git::https://github.com/Olensys/terraform-google-memorystore-redis.git?ref=v1.0.0"
 
   name = "example"
   context = {
