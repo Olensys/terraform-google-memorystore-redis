@@ -16,6 +16,7 @@ Memorystore for Redis Cluster with AUTH and in-transit encryption, a Private Ser
 ## Requirements note
 
 The pinned upstream requires `google >= 7.15`, so this module declares `>= 7.15, < 8.0` instead of the library-wide floor.
+The upstream module also requires `google-beta` (through its API-enablement submodule), so this module declares it with the same bound.
 
 ## Usage
 
@@ -47,6 +48,7 @@ module "this" {
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_google"></a> [google](#requirement\_google) | >= 7.15, < 8.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 7.15, < 8.0 |
 
 ## Providers
 
