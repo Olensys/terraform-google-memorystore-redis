@@ -12,6 +12,7 @@ Memorystore for Redis Cluster with AUTH and in-transit encryption, a Private Ser
 - Node type `REDIS_STANDARD_SMALL`; weekly maintenance window on Sunday 02:00 UTC.
 - Project APIs (`redis`, `networkconnectivity`, `compute`, `serviceconsumermanagement`) are not enabled by this module; enable them in the project beforehand.
 - Labels (`context.extra_tags` merged with `labels`, `labels` winning) are applied to the cluster resource; the upstream supports `labels` on the cluster in 16.4.1. They are not applied to the connection policy.
+- `context.extra_tags` keys and values are normalised to valid GCP label syntax (lowercase, `[^a-z0-9_-]` → `-`, 63 chars); `labels` are applied verbatim and win.
 
 ## Requirements note
 
@@ -21,10 +22,15 @@ The upstream module also requires `google-beta` (through its API-enablement subm
 ## Usage
 
 ```hcl
-module "this" {
-  source = "git::https://github.com/Olensys/terraform-google-memorystore-redis.git?ref=v1.0.0"
+module "naming" {
+  source  = "git::https://github.com/Olensys/terraform-null-naming.git?ref=v1.0.1"
+  context = var.context
+}
 
-  name       = "example"
+module "this" {
+  source = "git::https://github.com/Olensys/terraform-google-memorystore-redis.git?ref=v1.1.0"
+
+  name       = module.naming.name
   project_id = "my-project"
   region     = "us-central1"
   network = {
@@ -38,6 +44,8 @@ module "this" {
     owner        = "platform"
     cost_center  = "eng"
   }
+
+  labels = module.naming.labels
 }
 ```
 
