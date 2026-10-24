@@ -22,6 +22,16 @@ The upstream module also requires `google-beta` (through its API-enablement subm
 ## Usage
 
 ```hcl
+variable "context" {
+  default = {
+    organization = "olensys"
+    environment  = "dev"
+    application  = "example"
+    owner        = "platform"
+    cost_center  = "eng"
+  }
+}
+
 module "naming" {
   source  = "git::https://github.com/Olensys/terraform-null-naming.git?ref=v1.0.1"
   context = var.context
@@ -37,13 +47,7 @@ module "this" {
     name        = "my-network"
     subnet_name = "my-psc-subnet"
   }
-  context = {
-    organization = "olensys"
-    environment  = "dev"
-    application  = "example"
-    owner        = "platform"
-    cost_center  = "eng"
-  }
+  context = var.context
 
   labels = module.naming.labels
 }
