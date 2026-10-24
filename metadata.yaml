@@ -1,7 +1,7 @@
 name: terraform-google-memorystore-redis
 cloud: google          # aws | google | common
 tier: capability          # primitive | capability | blueprint
-maturity: experimental    # experimental | stable | deprecated
+maturity: stable    # experimental | stable | deprecated
 description: Memorystore for Redis Cluster with AUTH and in-transit encryption, a Private Service Connect connection policy, and HA in prod
 owners: [platform]
 upstream: "terraform-google-modules/memorystore/google//modules/redis-cluster 16.4.1"
