@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Olensys/terraform-google-memorystore-redis/compare/v1.2.0...v1.2.1) (2026-10-24)
+
+
+### Bug Fixes
+
+* **examples:** unique application slug so concurrent integration runs do not collide ([#3](https://github.com/Olensys/terraform-google-memorystore-redis/issues/3)) ([4901356](https://github.com/Olensys/terraform-google-memorystore-redis/commit/4901356582ce9b10cc269b91e73b370154fc2b1c))
+
 ## [1.2.0](https://github.com/Olensys/terraform-google-memorystore-redis/compare/v1.1.0...v1.2.0) (2026-10-24)
 
 
