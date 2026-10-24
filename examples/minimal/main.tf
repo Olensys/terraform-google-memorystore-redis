@@ -31,7 +31,7 @@ variable "subnet_name" {
 module "this" {
   source = "../../"
 
-  name       = "example"
+  name       = "olensys-test-redis"
   project_id = var.project_id
   region     = "us-central1"
   # smallest cluster node type for the integration apply
@@ -39,7 +39,7 @@ module "this" {
   context = {
     organization = "olensys"
     environment  = "test"
-    application  = "example"
+    application  = "redis"
     owner        = "platform"
     cost_center  = "eng"
   }
