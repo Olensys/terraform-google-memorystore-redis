@@ -124,7 +124,7 @@ run "test_create_false_plans_nothing" {
   }
 
   assert {
-    condition     = output.id == null && output.name == null && output.self_link == null && output.discovery_endpoint == null && output.port == null && output.labels == null && output.security_config == null && output.service_connection_policies == null && output.replica_count_effective == null
+    condition     = output.id == null && output.name == null && output.self_link == null && output.discovery_endpoint == null && output.port == null && output.labels == null && output.security_config == null && output.service_connection_policies == null && output.replica_count_effective == null && output.node_type == null
     error_message = "Every output must be null when create is false."
   }
 }
@@ -183,4 +183,23 @@ run "test_name_format_validation" {
   }
 
   expect_failures = [var.name]
+}
+
+run "test_node_type_default" {
+  command = plan
+
+  assert {
+    condition     = output.node_type == "REDIS_STANDARD_SMALL"
+    error_message = "node_type must default to REDIS_STANDARD_SMALL."
+  }
+}
+
+run "test_node_type_validation" {
+  command = plan
+
+  variables {
+    node_type = "REDIS_LARGE"
+  }
+
+  expect_failures = [var.node_type]
 }

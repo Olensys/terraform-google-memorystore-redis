@@ -45,3 +45,8 @@ output "replica_count_effective" {
   description = "Replicas per shard after the environment default is applied. Null when create is false."
   value       = var.create ? local.replica_count : null
 }
+
+output "node_type" {
+  description = "Node type applied to the cluster. Null when create is false."
+  value       = var.create ? var.node_type : null
+}

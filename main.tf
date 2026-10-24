@@ -32,7 +32,7 @@ module "this" {
 
   shard_count   = var.shard_count
   replica_count = local.replica_count
-  node_type     = "REDIS_STANDARD_SMALL"
+  node_type     = var.node_type
 
   authorization_mode      = local.authorization_mode
   transit_encryption_mode = local.transit_encryption_mode

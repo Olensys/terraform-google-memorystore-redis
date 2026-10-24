@@ -68,6 +68,16 @@ variable "replica_count" {
   }
 }
 
+variable "node_type" {
+  description = "Node type of every shard."
+  type        = string
+  default     = "REDIS_STANDARD_SMALL"
+  validation {
+    condition     = contains(["REDIS_SHARED_CORE_NANO", "REDIS_STANDARD_SMALL", "REDIS_HIGHMEM_MEDIUM", "REDIS_HIGHMEM_XLARGE"], var.node_type)
+    error_message = "node_type must be one of REDIS_SHARED_CORE_NANO, REDIS_STANDARD_SMALL, REDIS_HIGHMEM_MEDIUM, REDIS_HIGHMEM_XLARGE."
+  }
+}
+
 variable "auth_enabled" {
   description = "Enable IAM authentication (AUTH_MODE_IAM_AUTH). Redis Cluster uses IAM, not a password."
   type        = bool

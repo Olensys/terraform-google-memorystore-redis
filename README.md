@@ -9,7 +9,8 @@ Memorystore for Redis Cluster with AUTH and in-transit encryption, a Private Ser
 - One Private Service Connect service connection policy, `<name>-psc`, is created on `network.name` using `network.subnet_name`. That subnet must have purpose `PRIVATE_SERVICE_CONNECT`; `terraform-google-network` exposes its subnet names.
 - HA in prod: `replica_count` defaults to 1 per shard when `context.environment` is `prod`, otherwise 0. Zones are always `MULTI_ZONE`.
 - Deletion protection is on in prod only.
-- Node type `REDIS_STANDARD_SMALL`; weekly maintenance window on Sunday 02:00 UTC.
+- `node_type` defaults to `REDIS_STANDARD_SMALL`; the integration example uses `REDIS_SHARED_CORE_NANO`.
+- Weekly maintenance window on Sunday 02:00 UTC.
 - Project APIs (`redis`, `networkconnectivity`, `compute`, `serviceconsumermanagement`) are not enabled by this module; enable them in the project beforehand.
 - Labels (`context.extra_tags` merged with `labels`, `labels` winning) are applied to the cluster resource; the upstream supports `labels` on the cluster in 16.4.1. They are not applied to the connection policy.
 - `context.extra_tags` keys and values are normalised to valid GCP label syntax (lowercase, `[^a-z0-9_-]` → `-`, 63 chars); `labels` are applied verbatim and win.
@@ -88,6 +89,7 @@ No resources.
 | <a name="input_auth_enabled"></a> [auth\_enabled](#input\_auth\_enabled) | Enable IAM authentication (AUTH\_MODE\_IAM\_AUTH). Redis Cluster uses IAM, not a password. | `bool` | `true` | no |
 | <a name="input_create"></a> [create](#input\_create) | Whether to create any resources. Set false to create nothing. | `bool` | `true` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels merged onto the cluster, applied last. Must already be normalised by the caller. | `map(string)` | `{}` | no |
+| <a name="input_node_type"></a> [node\_type](#input\_node\_type) | Node type of every shard. | `string` | `"REDIS_STANDARD_SMALL"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Replicas per shard (0, 1 or 2). Null resolves to 1 in prod and 0 elsewhere. | `number` | `null` | no |
 | <a name="input_shard_count"></a> [shard\_count](#input\_shard\_count) | Number of shards in the cluster. | `number` | `1` | no |
 | <a name="input_transit_encryption"></a> [transit\_encryption](#input\_transit\_encryption) | Enable in-transit encryption (TLS with server authentication). | `bool` | `true` | no |
@@ -100,6 +102,7 @@ No resources.
 | <a name="output_id"></a> [id](#output\_id) | Cluster ID (projects/<project>/locations/<region>/clusters/<name>). Null when create is false. |
 | <a name="output_labels"></a> [labels](#output\_labels) | Labels applied to the cluster, with context.extra\_tags merged in. Null when create is false. |
 | <a name="output_name"></a> [name](#output\_name) | Cluster name. Null when create is false. |
+| <a name="output_node_type"></a> [node\_type](#output\_node\_type) | Node type applied to the cluster. Null when create is false. |
 | <a name="output_port"></a> [port](#output\_port) | Port of the cluster discovery endpoint. Null when create is false. |
 | <a name="output_replica_count_effective"></a> [replica\_count\_effective](#output\_replica\_count\_effective) | Replicas per shard after the environment default is applied. Null when create is false. |
 | <a name="output_security_config"></a> [security\_config](#output\_security\_config) | Effective authorization\_mode and transit\_encryption\_mode. Null when create is false. |
