@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/Olensys/terraform-google-memorystore-redis/compare/v1.1.0...v1.2.0) (2026-10-24)
+
+
+### Features
+
+* expose node_type ([fc71b8e](https://github.com/Olensys/terraform-google-memorystore-redis/commit/fc71b8ef91c18dcd40db0f38fa215b4a4f7adf7f))
+
+
+### Bug Fixes
+
+* **examples:** use REDIS_SHARED_CORE_NANO ([2d62a5c](https://github.com/Olensys/terraform-google-memorystore-redis/commit/2d62a5caf38668a869bef1efcd6109302c368e32))
+* run integration on change and weekly instead of nightly ([00da929](https://github.com/Olensys/terraform-google-memorystore-redis/commit/00da9292e26050929bd2b579c2c5dcffcd567777))
+
 ## 1.1.0
 
 ### Fixes
