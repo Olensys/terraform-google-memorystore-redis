@@ -34,6 +34,8 @@ module "this" {
   name       = "example"
   project_id = var.project_id
   region     = "us-central1"
+  # smallest cluster node type for the integration apply
+  node_type = "REDIS_SHARED_CORE_NANO"
   context = {
     organization = "olensys"
     environment  = "test"
