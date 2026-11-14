@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/Olensys/terraform-google-memorystore-redis/compare/v1.2.1...v1.3.0) (2026-11-14)
+
+
+### Features
+
+* adoption inputs service_connection_policy_name, maintenance_window, persistence_mode and deletion_protection ([#6](https://github.com/Olensys/terraform-google-memorystore-redis/issues/6)) ([3369fc0](https://github.com/Olensys/terraform-google-memorystore-redis/commit/3369fc0199adc83a47f539f02cb993dab40115be))
+
 ## [1.2.1](https://github.com/Olensys/terraform-google-memorystore-redis/compare/v1.2.0...v1.2.1) (2026-10-24)
 
 
