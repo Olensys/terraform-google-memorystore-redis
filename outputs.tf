@@ -50,3 +50,18 @@ output "node_type" {
   description = "Node type applied to the cluster. Null when create is false."
   value       = var.create ? var.node_type : null
 }
+
+output "deletion_protection" {
+  description = "Whether the cluster is protected from deletion (on in prod unless deletion_protection overrides it). Null when create is false."
+  value       = var.create ? local.deletion_protection : null
+}
+
+output "maintenance_window" {
+  description = "Weekly maintenance window passed to the upstream module. Null when create is false."
+  value       = var.create ? local.weekly_maintenance_window : null
+}
+
+output "persistence_config" {
+  description = "persistence_config passed to the upstream module; null when persistence_mode is null or create is false."
+  value       = var.create ? local.persistence_config : null
+}
