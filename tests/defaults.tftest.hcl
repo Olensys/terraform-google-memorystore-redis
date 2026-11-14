@@ -65,6 +65,186 @@ run "test_connection_policy_created" {
   }
 }
 
+run "test_connection_policy_name_override" {
+  command = plan
+
+  variables {
+    service_connection_policy_name = "legacy-policy"
+  }
+
+  assert {
+    condition     = output.service_connection_policies["legacy-policy"].network_name == "example-net" && !contains(keys(output.service_connection_policies), "example-psc")
+    error_message = "service_connection_policy_name must replace <name>-psc as the policy name."
+  }
+}
+
+run "test_connection_policy_name_validation" {
+  command = plan
+
+  variables {
+    service_connection_policy_name = "Bad_Name"
+  }
+
+  expect_failures = [var.service_connection_policy_name]
+}
+
+run "test_maintenance_window_default" {
+  command = plan
+
+  assert {
+    condition = (
+      output.maintenance_window.day_of_the_week == "SUNDAY"
+      && output.maintenance_window.hours == "2"
+      && output.maintenance_window.minutes == "0"
+      && output.maintenance_window.seconds == "0"
+      && output.maintenance_window.nanos == 0
+    )
+    error_message = "Default maintenance window is Sunday 02:00 UTC."
+  }
+}
+
+run "test_maintenance_window_override" {
+  command = plan
+
+  variables {
+    maintenance_window = { day = "TUESDAY", hour = 23, minute = 30 }
+  }
+
+  assert {
+    condition     = output.maintenance_window.day_of_the_week == "TUESDAY" && output.maintenance_window.hours == "23" && output.maintenance_window.minutes == "30"
+    error_message = "maintenance_window must be passed through as day name and string hours/minutes."
+  }
+}
+
+run "test_maintenance_window_validation" {
+  command = plan
+
+  variables {
+    maintenance_window = { day = "SUNDAY", hour = 24 }
+  }
+
+  expect_failures = [var.maintenance_window]
+}
+
+run "test_persistence_unset_by_default" {
+  command = plan
+
+  assert {
+    condition     = output.persistence_config == null
+    error_message = "persistence_config must not be set unless persistence_mode is given."
+  }
+}
+
+run "test_persistence_rdb" {
+  command = plan
+
+  variables {
+    persistence_mode = "RDB"
+  }
+
+  assert {
+    condition     = output.persistence_config.mode == "RDB" && output.persistence_config.rdb_config != null && output.persistence_config.aof_config == null
+    error_message = "RDB mode must pass mode RDB with an rdb_config sub-object and no aof_config."
+  }
+}
+
+run "test_persistence_aof" {
+  command = plan
+
+  variables {
+    persistence_mode = "AOF"
+  }
+
+  assert {
+    condition     = output.persistence_config.mode == "AOF" && output.persistence_config.aof_config != null && output.persistence_config.rdb_config == null
+    error_message = "AOF mode must pass mode AOF with an aof_config sub-object and no rdb_config."
+  }
+}
+
+run "test_persistence_disabled" {
+  command = plan
+
+  variables {
+    persistence_mode = "DISABLED"
+  }
+
+  assert {
+    condition     = output.persistence_config.mode == "DISABLED" && output.persistence_config.rdb_config == null && output.persistence_config.aof_config == null
+    error_message = "DISABLED must pass mode only."
+  }
+}
+
+run "test_persistence_mode_validation" {
+  command = plan
+
+  variables {
+    persistence_mode = "SNAPSHOT"
+  }
+
+  expect_failures = [var.persistence_mode]
+}
+
+run "test_deletion_protection_in_prod" {
+  command = plan
+
+  variables {
+    context = {
+      organization = "olensys"
+      environment  = "prod"
+      application  = "example"
+      owner        = "platform"
+      cost_center  = "eng"
+    }
+  }
+
+  assert {
+    condition     = output.deletion_protection == true
+    error_message = "Deletion protection must be on in prod."
+  }
+}
+
+run "test_deletion_protection_off_outside_prod" {
+  command = plan
+
+  assert {
+    condition     = output.deletion_protection == false
+    error_message = "Deletion protection must be off outside prod."
+  }
+}
+
+run "test_deletion_protection_override_on_outside_prod" {
+  command = plan
+
+  variables {
+    deletion_protection = true
+  }
+
+  assert {
+    condition     = output.deletion_protection == true
+    error_message = "deletion_protection = true must override the environment rule."
+  }
+}
+
+run "test_deletion_protection_override_off_in_prod" {
+  command = plan
+
+  variables {
+    deletion_protection = false
+    context = {
+      organization = "olensys"
+      environment  = "prod"
+      application  = "example"
+      owner        = "platform"
+      cost_center  = "eng"
+    }
+  }
+
+  assert {
+    condition     = output.deletion_protection == false
+    error_message = "deletion_protection = false must override the environment rule."
+  }
+}
+
 run "test_replica_default_in_prod" {
   command = plan
 
@@ -124,7 +304,7 @@ run "test_create_false_plans_nothing" {
   }
 
   assert {
-    condition     = output.id == null && output.name == null && output.self_link == null && output.discovery_endpoint == null && output.port == null && output.labels == null && output.security_config == null && output.service_connection_policies == null && output.replica_count_effective == null && output.node_type == null
+    condition     = output.id == null && output.name == null && output.self_link == null && output.discovery_endpoint == null && output.port == null && output.labels == null && output.security_config == null && output.service_connection_policies == null && output.replica_count_effective == null && output.node_type == null && output.deletion_protection == null && output.maintenance_window == null && output.persistence_config == null
     error_message = "Every output must be null when create is false."
   }
 }

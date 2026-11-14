@@ -90,6 +90,51 @@ variable "transit_encryption" {
   default     = true
 }
 
+variable "service_connection_policy_name" {
+  description = "Name of the Private Service Connect service connection policy. Null (the default) uses <name>-psc; set it to adopt an existing policy with a different name."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.service_connection_policy_name == null ? true : can(regex("^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$", var.service_connection_policy_name))
+    error_message = "service_connection_policy_name must match ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$ (1 to 63 characters)."
+  }
+}
+
+variable "maintenance_window" {
+  description = "Weekly maintenance window: day of week (MONDAY to SUNDAY) and start hour (0 to 23, UTC) with an optional minute (0 to 59). The window itself is fixed at one hour by the service. Null (the default) means Sunday 02:00 UTC."
+  type = object({
+    day    = string
+    hour   = number
+    minute = optional(number, 0)
+  })
+  default = null
+  validation {
+    condition = var.maintenance_window == null ? true : (
+      contains(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], var.maintenance_window.day)
+      && var.maintenance_window.hour >= 0 && var.maintenance_window.hour <= 23
+      && var.maintenance_window.minute >= 0 && var.maintenance_window.minute <= 59
+    )
+    error_message = "maintenance_window.day must be MONDAY to SUNDAY, hour 0 to 23 and minute 0 to 59."
+  }
+}
+
+variable "persistence_mode" {
+  description = "Persistence mode: PERSISTENCE_MODE_UNSPECIFIED, DISABLED, RDB or AOF. Null (the default) does not set persistence_config, leaving the service default. Snapshot period and fsync settings are left to the service (and kept as they are on an adopted cluster)."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.persistence_mode == null ? true : contains(["PERSISTENCE_MODE_UNSPECIFIED", "DISABLED", "RDB", "AOF"], var.persistence_mode)
+    error_message = "persistence_mode must be null or one of PERSISTENCE_MODE_UNSPECIFIED, DISABLED, RDB, AOF."
+  }
+}
+
+variable "deletion_protection" {
+  description = "Whether the cluster is protected from deletion. Null (the default) turns it on when context.environment is prod and off otherwise; true or false overrides that rule."
+  type        = bool
+  default     = null
+  nullable    = true
+}
+
 variable "labels" {
   description = "Labels merged onto the cluster, applied last. Must already be normalised by the caller."
   type        = map(string)
